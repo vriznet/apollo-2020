@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
@@ -27,6 +27,7 @@ const Container = styled.div`
 `;
 
 const Column = styled.div`
+  width: 30%;
   margin-left: 10px;
 `;
 
@@ -45,7 +46,10 @@ const Description = styled.p`
 `;
 
 const Poster = styled.div`
-  width: 25%;
+  background-image: url(${props => props.bg});
+  background-size: cover;
+  background-position: center center;
+  width: 30%;
   background-color: transparent;
   height: 60%;
 `;
@@ -59,11 +63,19 @@ export default () => {
   return (
     <Container>
       <Column>
-        <Title>Name</Title>
-        <Subtitle>English</Subtitle>
-        <Description>lorem ipsum lalalala</Description>
+        <Title>{loading ? 'loading...' : data.movie.title}</Title>
+        {!loading && data.movie && (
+          <React.Fragment>
+            <Subtitle>
+              {data.movie.language} {data.movie.rating}
+            </Subtitle>
+            <Description>{data.movie.description_intro}</Description>
+          </React.Fragment>
+        )}
       </Column>
-      {!loading && <Poster></Poster>}
+      {!loading && data.movie && (
+        <Poster bg={data.movie.medium_cover_image}></Poster>
+      )}
     </Container>
   );
 };
