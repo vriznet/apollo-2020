@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
@@ -12,6 +12,10 @@ const GET_MOVIE = gql`
       language
       rating
       description_intro
+    }
+    suggestions(id: $id) {
+      id
+      medium_cover_image
     }
   }
 `;
@@ -64,18 +68,12 @@ export default () => {
     <Container>
       <Column>
         <Title>{loading ? 'loading...' : data.movie.title}</Title>
-        {!loading && data.movie && (
-          <React.Fragment>
-            <Subtitle>
-              {data.movie.language} {data.movie.rating}
-            </Subtitle>
-            <Description>{data.movie.description_intro}</Description>
-          </React.Fragment>
-        )}
+        <Subtitle>
+          {data?.movie?.language} {data?.movie?.rating}
+        </Subtitle>
+        <Description>{data?.movie?.description_intro}</Description>
       </Column>
-      {!loading && data.movie && (
-        <Poster bg={data.movie.medium_cover_image}></Poster>
-      )}
+      <Poster bg={data?.movie?.medium_cover_image}></Poster>
     </Container>
   );
 };
